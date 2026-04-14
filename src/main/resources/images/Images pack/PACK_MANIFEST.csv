@@ -1,0 +1,31 @@
+category,subcategory,filename,resolution,pivot,notes
+Structures,Towers,magic_crystal_tower.png,232x265,center,Magic defense tower with blue crystal core.
+Enemies,Orcs,orc_brute.png,198x211,center,Heavy armored orc enemy.
+Characters,Heroes,knight_hero.png,188x205,center,Sword and shield hero unit.
+Characters,Heroes,mage_hero.png,170x194,center,Staff-wielding mage hero.
+Enemies,Orcs,orc_raider.png,162x179,center,Light armored goblin-orc raider.
+UI,Icons,icon_coin_10.png,115x111,center,Coin icon showing value 10.
+UI,Icons,icon_skull_5.png,118x104,center,Skull counter icon showing value 5.
+UI,Buttons,button_play.png,105x94,center,Green play button.
+UI,Buttons,button_pause.png,104x94,center,Green pause button.
+UI,Icons,icon_settings.png,126x94,center,Settings gear icon.
+UI,Icons,icon_heart.png,107x101,center,Heart or health icon.
+UI,Banners,banner_wave.png,196x92,center,Wave banner for enemy spawn warnings.
+UI,Icons,icon_undo.png,85x79,center,Undo or back icon.
+UI,Icons,icon_plus.png,87x78,center,Add or upgrade icon.
+UI,Icons,icon_arrow_up.png,87x78,center,Up arrow icon.
+Tiles,Paths,path_strip_variants.png,535x173,center,Horizontal strip of sandy path variants.
+Tiles,Paths,path_corner.png,244x171,center,L-shaped sandy path tile.
+Tiles,Ground,grass_tile_a.png,133x113,center,Square grass tile.
+Tiles,Ground,grass_tile_b.png,131x113,center,Alternate square grass tile.
+Tiles,Paths,grass_path_corner.png,268x134,center,Grass tile with sandy corner path.
+Resources,-,gold_pile.png,185x100,center,Gold resource pile.
+Props,Bridges,wood_bridge.png,226x113,center,Wood bridge over water.
+Tiles,Paths,path_short_segment.png,243x75,center,Short straight path segment.
+Props,Nature,pine_tree.png,142x159,center,Evergreen pine tree.
+Props,Nature,rock_bush_cluster.png,160x140,center,Rock and bush cluster.
+Props,Nature,bush_round.png,141x125,center,Round leafy bush.
+Props,Signs,wooden_signpost.png,140x126,center,Directional wooden signpost.
+Props,Nature,rock_cluster.png,154x107,center,Rock cluster.
+Props,Fences,fence_segment.png,234x99,center,Wooden fence segment.
+Backgrounds,-,world_preview_scene.png,951x412,center,Large world preview background scene.

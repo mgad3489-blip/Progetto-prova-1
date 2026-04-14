@@ -1,0 +1,32 @@
+Project title:
+Fantasy Tower Defense Starter Pack
+
+Short description:
+A curated 2D fantasy tower defense starter pack with clean folders, named PNG assets, and ready-made sprite sheets for Unity and similar engines.
+
+Suggested tags:
+2D, Fantasy, Tower Defense, Sprites, UI, Tileset, Unity, Game Assets
+
+Long description:
+Fantasy Tower Defense Starter Pack is built for prototypes, game jams, and early production workflows.
+
+Included in this release:
+- 30 curated PNG assets
+- 4 sprite sheets
+- Organized folders for heroes, enemies, tiles, props, UI, structures, and resources
+- Preview sheet, manifest, and upload docs
+
+Why this release is stronger:
+- Assets use descriptive names instead of generic auto-generated labels
+- Folder placement matches the art content more closely
+- Sprite sheets are included for faster browsing and engine import
+
+Important note:
+This is a starter pack assembled from the pack preview source. It is designed to be a better organized foundation, not a full animation-ready production pack yet.
+
+AI disclosure:
+This pack may include AI-assisted artwork that is curated, organized, and packaged by the creator.
+
+License note:
+Only redistribute assets you own or have permission to redistribute.
+Third-party reference packs are not included in the release zip.

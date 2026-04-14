@@ -1,0 +1,20 @@
+Fantasy Tower Defense Starter Pack License
+
+Copyright (c) 2026 Ahmed Hussain
+
+You may:
+- Use these assets in personal projects
+- Use these assets in commercial projects
+- Modify and edit the assets for your own game or application
+
+You may not:
+- Resell, redistribute, repackage, or share these assets as standalone files
+- Upload these assets to other asset stores or marketplaces as an unmodified standalone asset pack
+- Claim the original unmodified assets as your own work
+
+Credit:
+- Credit is appreciated but not required
+
+Notes:
+- This pack contains AI-assisted artwork curated and organized by the creator
+- License applies only to this pack download and not to any third-party content

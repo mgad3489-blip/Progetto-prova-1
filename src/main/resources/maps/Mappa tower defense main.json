@@ -1,0 +1,51 @@
+{
+       "compressionlevel": -1,
+       "height": 20,
+       "infinite": false,
+       "layers": [
+              {
+                     "compression": "zlib",
+                     "data": "eJyt1DeSAkEMQNEZYPHew+K992bxe\/9T8QmINSVN8KJf6qRLch3HCSCIEH4QRgRRuMouzcUQRwJJpJBGBllDl+ZyyKOAIkooo4KqoUtzNdTxiwaaaKGNjqFLc1300McAQ4wwxsTQpbkpZphjgSVWWGNj6NLcFjvsccARJ5zxZ+jS3AVX3HDHA0+88G\/o0py0Z37vtdf99Xuvve6v33vtdX\/93utvt\/yTtlnvs7ZZ77O2We+ztn3etdxnbbPeZ22z3mdts95nbfu8+wbj50Rd",
+                     "encoding": "base64",
+                     "height": 20,
+                     "id": 1,
+                     "name": "Terreno",
+                     "opacity": 1,
+                     "type": "tilelayer",
+                     "visible": true,
+                     "width": 30,
+                     "x": 0,
+                     "y": 0
+              },
+              {
+                     "compression": "zlib",
+                     "data": "eJxTY2BgUBvFgx5zAbEFCZgDqo+NgDoeAvaKAjEjGpZGotGxLR59yNiWDHuJMY\/a9jJjwdjMI9Z9xNiLS60dkeYRYxat7QVhfOmOmLAh115S08xQtBdbuiSEZSi0l9p4pNorPcLsHWnxi2wvAGZ\/SuA=",
+                     "encoding": "base64",
+                     "height": 20,
+                     "id": 2,
+                     "name": "Strada",
+                     "opacity": 1,
+                     "type": "tilelayer",
+                     "visible": true,
+                     "width": 30,
+                     "x": 0,
+                     "y": 0
+              }
+       ],
+       "nextlayerid": 3,
+       "nextobjectid": 1,
+       "orientation": "orthogonal",
+       "renderorder": "right-down",
+       "tiledversion": "1.12.0",
+       "tileheight": 32,
+       "tilesets": [
+              {
+                     "firstgid": 1,
+                     "source": "PROGRAMM. A OGG\/PROGETTO OOP\/Terreno.tsx"
+              }
+       ],
+       "tilewidth": 32,
+       "type": "map",
+       "version": "1.10",
+       "width": 30
+}
