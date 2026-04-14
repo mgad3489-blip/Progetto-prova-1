@@ -30,34 +30,41 @@ public class GameView {
         try {
             ClassLoader cl = GameView.class.getClassLoader();
             String b = "images/Images pack/Assets/";
-            spTowerBasic  = loadImg(cl, b + "Structures/Towers/magic_crystal_tower.png");
+            spTowerBasic = loadImg(cl, b + "Structures/Towers/magic_crystal_tower.png");
             spTowerSniper = loadImg(cl, b + "Characters/Heroes/knight_hero.png");
-            spTowerRapid  = loadImg(cl, b + "Characters/Heroes/mage_hero.png");
-            spTowerIce    = tintImg(spTowerBasic, new Color(100, 180, 255, 120));
-            spEnemyBasic  = loadImg(cl, b + "Enemies/Orcs/orc_raider.png");
-            spEnemyTank   = loadImg(cl, b + "Enemies/Orcs/orc_brute.png");
-            spEnemyFast   = tintImg(spEnemyBasic, new Color(50, 255, 50, 130));
-            imgTree       = loadImg(cl, b + "Props/Nature/pine_tree.png");
-            imgBush       = loadImg(cl, b + "Props/Nature/bush_round.png");
-            imgRock       = loadImg(cl, b + "Props/Nature/rock_cluster.png");
-            imgRockBush   = loadImg(cl, b + "Props/Nature/rock_bush_cluster.png");
-        } catch (Exception e) { e.printStackTrace(); }
+            spTowerRapid = loadImg(cl, b + "Characters/Heroes/mage_hero.png");
+            spTowerIce = tintImg(spTowerBasic, new Color(100, 180, 255, 120));
+            spEnemyBasic = loadImg(cl, b + "Enemies/Orcs/orc_raider.png");
+            spEnemyTank = loadImg(cl, b + "Enemies/Orcs/orc_brute.png");
+            spEnemyFast = tintImg(spEnemyBasic, new Color(50, 255, 50, 130));
+            imgTree = loadImg(cl, b + "Props/Nature/pine_tree.png");
+            imgBush = loadImg(cl, b + "Props/Nature/bush_round.png");
+            imgRock = loadImg(cl, b + "Props/Nature/rock_cluster.png");
+            imgRockBush = loadImg(cl, b + "Props/Nature/rock_bush_cluster.png");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static Image loadImg(ClassLoader cl, String path) {
-        try { java.net.URL u = cl.getResource(path); if (u != null) return new ImageIcon(u).getImage(); } catch (Exception ignored) {}
+        try { java.io.InputStream is = cl.getResourceAsStream(path); if (is != null) return javax.imageio.ImageIO.read(is); } catch (Exception ignored) {}
         return null;
     }
 
     private static Image tintImg(Image src, Color tint) {
-        if (src == null) return null;
+        if (src == null)
+            return null;
         int w = src.getWidth(null), h = src.getHeight(null);
-        if (w <= 0 || h <= 0) { w = 128; h = 128; }
+        if (w <= 0 || h <= 0) {
+            w = 128;
+            h = 128;
+        }
         BufferedImage t = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = t.createGraphics();
         g.drawImage(src, 0, 0, w, h, null);
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 0.5f));
-        g.setColor(tint); g.fillRect(0, 0, w, h);
+        g.setColor(tint);
+        g.fillRect(0, 0, w, h);
         g.dispose();
         return t;
     }
@@ -66,18 +73,20 @@ public class GameView {
     private MapPanel mapPanel;
     private JDialog pauseDialog;
 
-    public void displayWelcome() {}
+    public void displayWelcome() {
+    }
 
     // =================== MENU ===================
     public void showStartMenu(GameController c) {
-        if (menuFrame != null) menuFrame.dispose();
+        if (menuFrame != null)
+            menuFrame.dispose();
         menuFrame = new JFrame("TowerSiege");
         menuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         menuFrame.setResizable(false);
         JPanel p = new JPanel() {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                Graphics2D g2 = (Graphics2D)g;
+                Graphics2D g2 = (Graphics2D) g;
                 g2.setPaint(new GradientPaint(0, 0, new Color(25, 18, 12), 0, getHeight(), new Color(50, 35, 20)));
                 g2.fillRect(0, 0, getWidth(), getHeight());
             }
@@ -85,52 +94,75 @@ public class GameView {
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
         p.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
         JLabel title = mkLabel("TOWERSIEGE", new Font("Serif", Font.BOLD, 52), C_GOLD);
-        JLabel sub = mkLabel("Difendi la base dalle ondate nemiche!", new Font("Serif", Font.ITALIC, 18), new Color(220, 200, 160));
-        JLabel i1 = mkLabel("Click sx = piazza/potenzia | Click dx = vendi torre", new Font("Serif", Font.PLAIN, 13), new Color(180,180,180));
-        JLabel i2 = mkLabel("W = Ondata | F = Fuoco | G = Gelo | ESC = Pausa", new Font("Serif", Font.PLAIN, 13), new Color(180,180,180));
+        JLabel sub = mkLabel("Difendi la base dalle ondate nemiche!", new Font("Serif", Font.ITALIC, 18),
+                new Color(220, 200, 160));
+        JLabel i1 = mkLabel("Click sx = piazza/potenzia | Click dx = vendi torre", new Font("Serif", Font.PLAIN, 13),
+                new Color(180, 180, 180));
+        JLabel i2 = mkLabel("W = Ondata | F = Fuoco | G = Gelo | ESC = Pausa", new Font("Serif", Font.PLAIN, 13),
+                new Color(180, 180, 180));
         JButton start = btn("INIZIA PARTITA", new Color(30, 150, 80));
-        start.addActionListener(e -> { menuFrame.dispose(); c.beginGame(); });
+        start.addActionListener(e -> {
+            menuFrame.dispose();
+            c.beginGame();
+        });
         JButton rules = btn("REGOLAMENTO", new Color(50, 90, 170));
         rules.addActionListener(e -> showRules());
         JButton exit = btn("ESCI", new Color(170, 45, 45));
         exit.addActionListener(e -> System.exit(0));
-        p.add(title); p.add(Box.createRigidArea(new Dimension(0, 10)));
-        p.add(sub); p.add(Box.createRigidArea(new Dimension(0, 12)));
-        p.add(i1); p.add(Box.createRigidArea(new Dimension(0, 4)));
-        p.add(i2); p.add(Box.createRigidArea(new Dimension(0, 22)));
-        p.add(start); p.add(Box.createRigidArea(new Dimension(0, 10)));
-        p.add(rules); p.add(Box.createRigidArea(new Dimension(0, 10)));
+        p.add(title);
+        p.add(Box.createRigidArea(new Dimension(0, 10)));
+        p.add(sub);
+        p.add(Box.createRigidArea(new Dimension(0, 12)));
+        p.add(i1);
+        p.add(Box.createRigidArea(new Dimension(0, 4)));
+        p.add(i2);
+        p.add(Box.createRigidArea(new Dimension(0, 22)));
+        p.add(start);
+        p.add(Box.createRigidArea(new Dimension(0, 10)));
+        p.add(rules);
+        p.add(Box.createRigidArea(new Dimension(0, 10)));
         p.add(exit);
-        menuFrame.add(p); menuFrame.setSize(800, 600);
-        menuFrame.setLocationRelativeTo(null); menuFrame.setVisible(true);
+        menuFrame.add(p);
+        menuFrame.setSize(800, 600);
+        menuFrame.setLocationRelativeTo(null);
+        menuFrame.setVisible(true);
     }
 
     private void showRules() {
         JDialog d = new JDialog(menuFrame, "Regolamento", true);
-        d.setSize(520, 420); d.setLocationRelativeTo(menuFrame);
+        d.setSize(520, 420);
+        d.setLocationRelativeTo(menuFrame);
         JTextArea t = new JTextArea();
-        t.setEditable(false); t.setFont(new Font("Serif", Font.PLAIN, 14));
-        t.setLineWrap(true); t.setWrapStyleWord(true);
-        t.setBackground(new Color(40, 35, 30)); t.setForeground(new Color(230, 220, 200));
+        t.setEditable(false);
+        t.setFont(new Font("Serif", Font.PLAIN, 14));
+        t.setLineWrap(true);
+        t.setWrapStyleWord(true);
+        t.setBackground(new Color(40, 35, 30));
+        t.setForeground(new Color(230, 220, 200));
         t.setMargin(new Insets(15, 15, 15, 15));
         t.setText("=== REGOLE ===\n\nOBIETTIVO:\nPiazza torri sui punti di costruzione per fermare i nemici!\n\n" +
-            "TORRI:\n  Cristallo (50g) - Danno medio\n  Cavaliere (120g) - Alto danno, lento\n  Mago (80g) - Rapido fuoco\n  Ghiaccio (90g) - Rallenta\n\n" +
-            "NEMICI:\n  Orco (standard) | Goblin (veloce, verde) | Bruto (lento, grosso)\n\n" +
-            "CONTROLLI:\n  Click sinistro = piazza/potenzia torre\n  Click destro = vendi torre (rimborso 50%)\n  W = ondata | F = fuoco (15s CD) | G = gelo (8s CD) | ESC = pausa");
-        JButton cb = new JButton("Chiudi"); cb.addActionListener(e -> d.dispose());
-        d.add(new JScrollPane(t), BorderLayout.CENTER); d.add(cb, BorderLayout.SOUTH); d.setVisible(true);
+                "TORRI:\n  Cristallo (50g) - Danno medio\n  Cavaliere (120g) - Alto danno, lento\n  Mago (80g) - Rapido fuoco\n  Ghiaccio (90g) - Rallenta\n\n"
+                +
+                "NEMICI:\n  Orco (standard) | Goblin (veloce, verde) | Bruto (lento, grosso)\n\n" +
+                "CONTROLLI:\n  Click sinistro = piazza/potenzia torre\n  Click destro = vendi torre (rimborso 50%)\n  W = ondata | F = fuoco (15s CD) | G = gelo (8s CD) | ESC = pausa");
+        JButton cb = new JButton("Chiudi");
+        cb.addActionListener(e -> d.dispose());
+        d.add(new JScrollPane(t), BorderLayout.CENTER);
+        d.add(cb, BorderLayout.SOUTH);
+        d.setVisible(true);
     }
 
     // =================== LEVEL SELECT ===================
     public void showLevelSelect(GameController c, GameModel model) {
-        if (levelFrame != null) levelFrame.dispose();
+        if (levelFrame != null)
+            levelFrame.dispose();
         levelFrame = new JFrame("Mappa dei Livelli");
         levelFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         levelFrame.setResizable(false);
         JPanel panel = new JPanel() {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                Graphics2D g2 = (Graphics2D)g;
+                Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 int w = getWidth(), h = getHeight();
 
@@ -146,14 +178,15 @@ public class GameView {
                 // Scatter decorations
                 for (int i = 0; i < 25; i++) {
                     int dx = r.nextInt(w - 40) + 20, dy = r.nextInt(h - 60) + 20;
-                    Image[] imgs = {imgTree, imgBush, imgRock, imgRockBush};
+                    Image[] imgs = { imgTree, imgBush, imgRock, imgRockBush };
                     Image di = imgs[r.nextInt(4)];
                     int ds = 25 + r.nextInt(20);
-                    if (di != null) g2.drawImage(di, dx, dy, ds, ds, null);
+                    if (di != null)
+                        g2.drawImage(di, dx, dy, ds, ds, null);
                 }
 
                 // Level positions on a winding path
-                int[][] lvlPos = {{140, 440}, {400, 250}, {660, 400}};
+                int[][] lvlPos = { { 140, 440 }, { 400, 250 }, { 660, 400 } };
 
                 // Draw winding path between levels
                 g2.setColor(new Color(180, 150, 100));
@@ -182,13 +215,15 @@ public class GameView {
 
                 // Title
                 g2.setFont(new Font("Serif", Font.BOLD, 34));
-                g2.setColor(new Color(0,0,0,140)); g2.drawString("MAPPA DEI LIVELLI", 222, 52);
-                g2.setColor(C_GOLD); g2.drawString("MAPPA DEI LIVELLI", 220, 50);
+                g2.setColor(new Color(0, 0, 0, 140));
+                g2.drawString("MAPPA DEI LIVELLI", 222, 52);
+                g2.setColor(C_GOLD);
+                g2.drawString("MAPPA DEI LIVELLI", 220, 50);
 
                 // Draw level nodes
-                String[] names = {"Foresta", "Pianura", "Montagna"};
-                String[] diff = {"Facile", "Medio", "Difficile"};
-                Color[] cols = {new Color(40, 180, 80), new Color(200, 160, 40), new Color(200, 60, 60)};
+                String[] names = { "Foresta", "Pianura", "Montagna" };
+                String[] diff = { "Facile", "Medio", "Difficile" };
+                Color[] cols = { new Color(40, 180, 80), new Color(200, 160, 40), new Color(200, 60, 60) };
                 int maxU = model.getMaxUnlockedLevel();
 
                 for (int i = 0; i < 3; i++) {
@@ -202,7 +237,8 @@ public class GameView {
                     }
 
                     // Stone circle base
-                    g2.setColor(new Color(0, 0, 0, 60)); g2.fillOval(cx - 37, cy - 33, 74, 70);
+                    g2.setColor(new Color(0, 0, 0, 60));
+                    g2.fillOval(cx - 37, cy - 33, 74, 70);
                     g2.setColor(unlocked ? new Color(60, 50, 35) : new Color(50, 50, 50));
                     g2.fillOval(cx - 35, cy - 35, 70, 70);
                     g2.setColor(unlocked ? cols[i] : new Color(80, 80, 80));
@@ -214,41 +250,41 @@ public class GameView {
                     g2.setFont(new Font("Serif", Font.BOLD, 36));
                     g2.setColor(unlocked ? Color.WHITE : new Color(100, 100, 100));
                     FontMetrics fm = g2.getFontMetrics();
-                    g2.drawString("" + (i+1), cx - fm.stringWidth(""+(i+1))/2, cy + 12);
+                    g2.drawString("" + (i + 1), cx - fm.stringWidth("" + (i + 1)) / 2, cy + 12);
 
                     // Name below
                     g2.setFont(new Font("Serif", Font.BOLD, 14));
                     g2.setColor(unlocked ? C_GOLD : new Color(100, 100, 100));
                     fm = g2.getFontMetrics();
-                    g2.drawString(names[i], cx - fm.stringWidth(names[i])/2, cy + 52);
+                    g2.drawString(names[i], cx - fm.stringWidth(names[i]) / 2, cy + 52);
 
                     // Difficulty
                     g2.setFont(new Font("Serif", Font.ITALIC, 11));
                     g2.setColor(unlocked ? cols[i] : new Color(80, 80, 80));
                     fm = g2.getFontMetrics();
-                    g2.drawString(diff[i], cx - fm.stringWidth(diff[i])/2, cy + 66);
+                    g2.drawString(diff[i], cx - fm.stringWidth(diff[i]) / 2, cy + 66);
 
                     // Lock
                     if (!unlocked) {
                         g2.setColor(new Color(160, 160, 160, 200));
                         g2.setFont(new Font("Serif", Font.BOLD, 28));
                         fm = g2.getFontMetrics();
-                        g2.drawString("X", cx - fm.stringWidth("X")/2, cy + 8);
+                        g2.drawString("X", cx - fm.stringWidth("X") / 2, cy + 8);
                     }
                 }
 
                 // Back button hint
                 g2.setFont(new Font("Serif", Font.PLAIN, 12));
                 g2.setColor(new Color(200, 200, 200, 150));
-                g2.drawString("Clicca su un livello per giocare", w/2 - 100, h - 20);
+                g2.drawString("Clicca su un livello per giocare", w / 2 - 100, h - 20);
             }
         };
         panel.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                int[][] lvlPos = {{140, 440}, {400, 250}, {660, 400}};
+                int[][] lvlPos = { { 140, 440 }, { 400, 250 }, { 660, 400 } };
                 for (int i = 0; i < 3; i++) {
                     int dx = e.getX() - lvlPos[i][0], dy = e.getY() - lvlPos[i][1];
-                    if (dx*dx + dy*dy < 40*40 && (i+1) <= model.getMaxUnlockedLevel()) {
+                    if (dx * dx + dy * dy < 40 * 40 && (i + 1) <= model.getMaxUnlockedLevel()) {
                         levelFrame.dispose();
                         c.startLevel(i + 1);
                         break;
@@ -257,14 +293,21 @@ public class GameView {
             }
         });
         panel.setPreferredSize(new Dimension(800, 600));
-        levelFrame.add(panel); levelFrame.pack();
-        levelFrame.setLocationRelativeTo(null); levelFrame.setVisible(true);
+        levelFrame.add(panel);
+        levelFrame.pack();
+        levelFrame.setLocationRelativeTo(null);
+        levelFrame.setVisible(true);
     }
 
     // =================== GAME ===================
     public void displayGameState(GameModel model, GameController c) {
-        if (frame == null) initGui(model, c);
-        else { mapPanel.setModel(model); mapPanel.setCtrl(c); mapPanel.repaint(); }
+        if (frame == null)
+            initGui(model, c);
+        else {
+            mapPanel.setModel(model);
+            mapPanel.setCtrl(c);
+            mapPanel.repaint();
+        }
     }
 
     private void initGui(GameModel model, GameController c) {
@@ -276,23 +319,47 @@ public class GameView {
         frame.add(mapPanel);
         InputMap im = frame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap am = frame.getRootPane().getActionMap();
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "p"); am.put("p", act(() -> c.togglePause()));
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), "w"); am.put("w", act(() -> c.forceNextWave()));
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F, 0), "f"); am.put("f", act(() -> c.triggerRainOfFire()));
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_G, 0), "g"); am.put("g", act(() -> c.triggerGlobalFreeze()));
-        frame.pack(); frame.setLocationRelativeTo(null); frame.setVisible(true); frame.requestFocusInWindow();
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "p");
+        am.put("p", act(() -> c.togglePause()));
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), "w");
+        am.put("w", act(() -> c.forceNextWave()));
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F, 0), "f");
+        am.put("f", act(() -> c.triggerRainOfFire()));
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_G, 0), "g");
+        am.put("g", act(() -> c.triggerGlobalFreeze()));
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+        frame.requestFocusInWindow();
     }
 
-    private AbstractAction act(Runnable r) { return new AbstractAction() { public void actionPerformed(ActionEvent e) { r.run(); } }; }
+    private AbstractAction act(Runnable r) {
+        return new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                r.run();
+            }
+        };
+    }
 
     // =================== MAP PANEL ===================
     private static class MapPanel extends JPanel {
         private GameModel model;
         private GameController ctrl;
         private BuildingSpot hoverSpot;
-        MapPanel(GameModel m, GameController c) { model = m; ctrl = c; setupMouse(); }
-        void setModel(GameModel m) { model = m; }
-        void setCtrl(GameController c) { ctrl = c; }
+
+        MapPanel(GameModel m, GameController c) {
+            model = m;
+            ctrl = c;
+            setupMouse();
+        }
+
+        void setModel(GameModel m) {
+            model = m;
+        }
+
+        void setCtrl(GameController c) {
+            ctrl = c;
+        }
 
         void setupMouse() {
             addMouseMotionListener(new MouseAdapter() {
@@ -310,7 +377,8 @@ public class GameView {
                     // Right-click = sell tower
                     if (e.getButton() == MouseEvent.BUTTON3) {
                         BuildingSpot spot = model.getMap().getSpotAt(col, row);
-                        if (spot != null) ctrl.sellTowerAtSpot(spot);
+                        if (spot != null)
+                            ctrl.sellTowerAtSpot(spot);
                         return;
                     }
                     // Left-click: shop cards first
@@ -320,12 +388,15 @@ public class GameView {
                     for (int i = 0; i < types.length; i++) {
                         int cx = sx + i * (cw + gap);
                         if (e.getX() >= cx && e.getX() <= cx + cw && e.getY() >= sy && e.getY() <= sy + 70) {
-                            ctrl.setSelectedTowerType(types[i]); repaint(); return;
+                            ctrl.setSelectedTowerType(types[i]);
+                            repaint();
+                            return;
                         }
                     }
                     // Then building spots
                     BuildingSpot spot = model.getMap().getSpotAt(col, row);
-                    if (spot != null) ctrl.interactWithSpot(spot);
+                    if (spot != null)
+                        ctrl.interactWithSpot(spot);
                 }
             });
         }
@@ -562,125 +633,206 @@ public class GameView {
             Color fallback, outline;
             switch (type) {
                 case FAST:
-                    size = 22; spr = spEnemyFast;
-                    fallback = new Color(60, 200, 60); outline = new Color(30, 140, 30); break;
+                    size = 22;
+                    spr = spEnemyFast;
+                    fallback = new Color(60, 200, 60);
+                    outline = new Color(30, 140, 30);
+                    break;
                 case TANK:
-                    size = 46; spr = spEnemyTank;
-                    fallback = new Color(120, 70, 30); outline = new Color(80, 40, 15); break;
+                    size = 46;
+                    spr = spEnemyTank;
+                    fallback = new Color(120, 70, 30);
+                    outline = new Color(80, 40, 15);
+                    break;
                 default:
-                    size = 32; spr = spEnemyBasic;
-                    fallback = new Color(160, 90, 40); outline = new Color(110, 60, 25); break;
+                    size = 32;
+                    spr = spEnemyBasic;
+                    fallback = new Color(160, 90, 40);
+                    outline = new Color(110, 60, 25);
+                    break;
             }
             // Shadow
-            g2.setColor(new Color(0,0,0,35)); g2.fillOval(ex-size/3, ey+size/4, size*2/3, size/4);
+            g2.setColor(new Color(0, 0, 0, 35));
+            g2.fillOval(ex - size / 3, ey + size / 4, size * 2 / 3, size / 4);
             if (spr != null) {
-                g2.drawImage(spr, ex-size/2, ey-size/2, size, size, null);
+                g2.drawImage(spr, ex - size / 2, ey - size / 2, size, size, null);
                 if (en.getHitFlashTicks() > 0) {
-                    g2.setColor(new Color(255,80,80,100)); g2.fillOval(ex-size/2,ey-size/2,size,size);
+                    g2.setColor(new Color(255, 80, 80, 100));
+                    g2.fillOval(ex - size / 2, ey - size / 2, size, size);
                 }
             } else {
                 // Detailed fallback: body + outline + type marker
-                g2.setColor(fallback); g2.fillOval(ex-size/2,ey-size/2,size,size);
-                g2.setColor(outline); g2.setStroke(new BasicStroke(2)); g2.drawOval(ex-size/2,ey-size/2,size,size); g2.setStroke(new BasicStroke(1));
+                g2.setColor(fallback);
+                g2.fillOval(ex - size / 2, ey - size / 2, size, size);
+                g2.setColor(outline);
+                g2.setStroke(new BasicStroke(2));
+                g2.drawOval(ex - size / 2, ey - size / 2, size, size);
+                g2.setStroke(new BasicStroke(1));
                 // Eyes
                 g2.setColor(Color.WHITE);
-                g2.fillOval(ex-size/5-2, ey-size/6, size/5, size/5);
-                g2.fillOval(ex+2, ey-size/6, size/5, size/5);
+                g2.fillOval(ex - size / 5 - 2, ey - size / 6, size / 5, size / 5);
+                g2.fillOval(ex + 2, ey - size / 6, size / 5, size / 5);
                 g2.setColor(Color.BLACK);
-                g2.fillOval(ex-size/5, ey-size/6+1, size/8, size/8);
-                g2.fillOval(ex+3, ey-size/6+1, size/8, size/8);
+                g2.fillOval(ex - size / 5, ey - size / 6 + 1, size / 8, size / 8);
+                g2.fillOval(ex + 3, ey - size / 6 + 1, size / 8, size / 8);
                 // Type label
-                g2.setColor(Color.WHITE); g2.setFont(new Font("Arial",Font.BOLD,8));
+                g2.setColor(Color.WHITE);
+                g2.setFont(new Font("Arial", Font.BOLD, 8));
                 String lbl = type == EnemyType.FAST ? "G" : type == EnemyType.TANK ? "B" : "O";
-                g2.drawString(lbl, ex-3, ey+size/3);
+                g2.drawString(lbl, ex - 3, ey + size / 3);
             }
             // Health bar
             if (en.getHealth() < en.getMaxHealth()) {
-                int bw = size+4, bh = 5, bx = ex-bw/2, by = ey-size/2-10;
-                g2.setColor(new Color(20,20,20,200)); g2.fillRect(bx-1,by-1,bw+2,bh+2);
-                g2.setColor(new Color(50,50,50)); g2.fillRect(bx,by,bw,bh);
-                double pct = (double)en.getHealth()/en.getMaxHealth();
-                g2.setColor(pct>.5?new Color(30,200,30):pct>.25?new Color(220,200,0):new Color(200,30,30));
-                g2.fillRect(bx,by,(int)(bw*pct),bh);
+                int bw = size + 4, bh = 5, bx = ex - bw / 2, by = ey - size / 2 - 10;
+                g2.setColor(new Color(20, 20, 20, 200));
+                g2.fillRect(bx - 1, by - 1, bw + 2, bh + 2);
+                g2.setColor(new Color(50, 50, 50));
+                g2.fillRect(bx, by, bw, bh);
+                double pct = (double) en.getHealth() / en.getMaxHealth();
+                g2.setColor(pct > .5 ? new Color(30, 200, 30)
+                        : pct > .25 ? new Color(220, 200, 0) : new Color(200, 30, 30));
+                g2.fillRect(bx, by, (int) (bw * pct), bh);
             }
         }
 
-
-
         void bigMsg(Graphics2D g2, String text, Color color, int pw, int ph) {
-            g2.setFont(new Font("Serif",Font.BOLD,50)); FontMetrics fm = g2.getFontMetrics();
-            int tx = (pw-fm.stringWidth(text))/2, ty = ph/2-30;
-            g2.setColor(new Color(0,0,0,180)); g2.drawString(text,tx+3,ty+3);
-            g2.setColor(color); g2.drawString(text,tx,ty);
+            g2.setFont(new Font("Serif", Font.BOLD, 50));
+            FontMetrics fm = g2.getFontMetrics();
+            int tx = (pw - fm.stringWidth(text)) / 2, ty = ph / 2 - 30;
+            g2.setColor(new Color(0, 0, 0, 180));
+            g2.drawString(text, tx + 3, ty + 3);
+            g2.setColor(color);
+            g2.drawString(text, tx, ty);
         }
 
         void drawShop(Graphics2D g2) {
             TowerType[] types = TowerType.values();
-            int cw = 100, ch = 65, gap = 8, total = types.length*(cw+gap)-gap;
-            int sx = (getWidth()-total)/2, sy = getHeight()-ch-12;
-            g2.setColor(C_UI); g2.fillRoundRect(sx-12,sy-6,total+24,ch+12,14,14);
-            g2.setColor(new Color(140,115,80)); g2.setStroke(new BasicStroke(2)); g2.drawRoundRect(sx-12,sy-6,total+24,ch+12,14,14); g2.setStroke(new BasicStroke(1));
+            int cw = 100, ch = 65, gap = 8, total = types.length * (cw + gap) - gap;
+            int sx = (getWidth() - total) / 2, sy = getHeight() - ch - 12;
+            g2.setColor(C_UI);
+            g2.fillRoundRect(sx - 12, sy - 6, total + 24, ch + 12, 14, 14);
+            g2.setColor(new Color(140, 115, 80));
+            g2.setStroke(new BasicStroke(2));
+            g2.drawRoundRect(sx - 12, sy - 6, total + 24, ch + 12, 14, 14);
+            g2.setStroke(new BasicStroke(1));
             for (int i = 0; i < types.length; i++) {
-                TowerType t = types[i]; int cx = sx+i*(cw+gap);
+                TowerType t = types[i];
+                int cx = sx + i * (cw + gap);
                 boolean sel = t == ctrl.getSelectedTowerType(), aff = model.getPlayer().getCoins() >= t.getCost();
-                g2.setColor(sel?new Color(75,115,75):new Color(50,44,36)); g2.fillRoundRect(cx,sy,cw,ch,8,8);
-                g2.setColor(sel?C_GOLD:new Color(95,80,60)); g2.setStroke(new BasicStroke(sel?2:1)); g2.drawRoundRect(cx,sy,cw,ch,8,8); g2.setStroke(new BasicStroke(1));
+                g2.setColor(sel ? new Color(75, 115, 75) : new Color(50, 44, 36));
+                g2.fillRoundRect(cx, sy, cw, ch, 8, 8);
+                g2.setColor(sel ? C_GOLD : new Color(95, 80, 60));
+                g2.setStroke(new BasicStroke(sel ? 2 : 1));
+                g2.drawRoundRect(cx, sy, cw, ch, 8, 8);
+                g2.setStroke(new BasicStroke(1));
                 Image img = towerSprite(t);
-                if (img != null) g2.drawImage(img,cx+3,sy+3,28,38,null);
-                g2.setFont(new Font("Serif",Font.BOLD,10)); g2.setColor(Color.WHITE); g2.drawString(t.getDescription(),cx+34,sy+18);
-                g2.setFont(new Font("Serif",Font.BOLD,12)); g2.setColor(aff?C_GOLD:new Color(200,60,60)); g2.drawString(t.getCost()+"g",cx+34,sy+38);
-                if (!aff) { g2.setColor(new Color(0,0,0,110)); g2.fillRoundRect(cx,sy,cw,ch,8,8); }
+                if (img != null)
+                    g2.drawImage(img, cx + 3, sy + 3, 28, 38, null);
+                g2.setFont(new Font("Serif", Font.BOLD, 10));
+                g2.setColor(Color.WHITE);
+                g2.drawString(t.getDescription(), cx + 34, sy + 18);
+                g2.setFont(new Font("Serif", Font.BOLD, 12));
+                g2.setColor(aff ? C_GOLD : new Color(200, 60, 60));
+                g2.drawString(t.getCost() + "g", cx + 34, sy + 38);
+                if (!aff) {
+                    g2.setColor(new Color(0, 0, 0, 110));
+                    g2.fillRoundRect(cx, sy, cw, ch, 8, 8);
+                }
             }
         }
 
         static Image towerSprite(TowerType t) {
-            switch(t) { case SNIPER:return spTowerSniper; case RAPID:return spTowerRapid; case ICE:return spTowerIce; default:return spTowerBasic; }
+            switch (t) {
+                case SNIPER:
+                    return spTowerSniper;
+                case RAPID:
+                    return spTowerRapid;
+                case ICE:
+                    return spTowerIce;
+                default:
+                    return spTowerBasic;
+            }
         }
     }
 
     // =================== PAUSE ===================
     public void showPauseMenu(GameController c) {
         SwingUtilities.invokeLater(() -> {
-            if (pauseDialog != null) pauseDialog.dispose();
+            if (pauseDialog != null)
+                pauseDialog.dispose();
             pauseDialog = new JDialog(frame, "Pausa", true);
             pauseDialog.setSize(300, 270);
             JPanel p = new JPanel();
             p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
             p.setBackground(new Color(30, 30, 40));
             p.setBorder(BorderFactory.createEmptyBorder(18, 25, 18, 25));
-            JLabel tl = mkLabel("PAUSA", new Font("Serif",Font.BOLD,22), C_GOLD);
-            JButton rb = btn("Riprendi", new Color(0,150,80)); rb.addActionListener(e -> c.togglePause());
-            JButton rst = btn("Ricomincia", new Color(50,120,180)); rst.addActionListener(e -> c.restartGame());
-            JButton lvl = btn("Mappa Livelli", new Color(140,120,40)); lvl.addActionListener(e -> c.backToLevelSelect());
-            JButton mb = btn("Menu", new Color(150,50,50)); mb.addActionListener(e -> c.backToMenu());
-            p.add(tl); p.add(Box.createRigidArea(new Dimension(0,12)));
-            p.add(rb); p.add(Box.createRigidArea(new Dimension(0,6)));
-            p.add(rst); p.add(Box.createRigidArea(new Dimension(0,6)));
-            p.add(lvl); p.add(Box.createRigidArea(new Dimension(0,6)));
+            JLabel tl = mkLabel("PAUSA", new Font("Serif", Font.BOLD, 22), C_GOLD);
+            JButton rb = btn("Riprendi", new Color(0, 150, 80));
+            rb.addActionListener(e -> c.togglePause());
+            JButton rst = btn("Ricomincia", new Color(50, 120, 180));
+            rst.addActionListener(e -> c.restartGame());
+            JButton lvl = btn("Mappa Livelli", new Color(140, 120, 40));
+            lvl.addActionListener(e -> c.backToLevelSelect());
+            JButton mb = btn("Menu", new Color(150, 50, 50));
+            mb.addActionListener(e -> c.backToMenu());
+            p.add(tl);
+            p.add(Box.createRigidArea(new Dimension(0, 12)));
+            p.add(rb);
+            p.add(Box.createRigidArea(new Dimension(0, 6)));
+            p.add(rst);
+            p.add(Box.createRigidArea(new Dimension(0, 6)));
+            p.add(lvl);
+            p.add(Box.createRigidArea(new Dimension(0, 6)));
             p.add(mb);
-            pauseDialog.add(p); pauseDialog.setLocationRelativeTo(frame); pauseDialog.setVisible(true);
+            pauseDialog.add(p);
+            pauseDialog.setLocationRelativeTo(frame);
+            pauseDialog.setVisible(true);
         });
     }
-    public void hidePauseMenu() { SwingUtilities.invokeLater(() -> { if (pauseDialog !=null){pauseDialog.dispose();pauseDialog=null;} }); }
-    public void displayEndGame(GameState s) {}
+
+    public void hidePauseMenu() {
+        SwingUtilities.invokeLater(() -> {
+            if (pauseDialog != null) {
+                pauseDialog.dispose();
+                pauseDialog = null;
+            }
+        });
+    }
+
+    public void displayEndGame(GameState s) {
+    }
+
     public void closeGameFrame() {
-        if (frame!=null){frame.dispose();frame=null;mapPanel=null;}
-        if (levelFrame!=null){levelFrame.dispose();levelFrame=null;}
+        if (frame != null) {
+            frame.dispose();
+            frame = null;
+            mapPanel = null;
+        }
+        if (levelFrame != null) {
+            levelFrame.dispose();
+            levelFrame = null;
+        }
     }
 
     // Helpers
     private static JLabel mkLabel(String text, Font font, Color color) {
         JLabel l = new JLabel(text);
-        l.setAlignmentX(Component.CENTER_ALIGNMENT); l.setFont(font); l.setForeground(color);
+        l.setAlignmentX(Component.CENTER_ALIGNMENT);
+        l.setFont(font);
+        l.setForeground(color);
         l.setHorizontalAlignment(SwingConstants.CENTER);
         return l;
     }
+
     private static JButton btn(String text, Color bg) {
         JButton b = new JButton(text);
         b.setAlignmentX(Component.CENTER_ALIGNMENT);
-        b.setMaximumSize(new Dimension(260,40));
-        b.setFont(new Font("Serif",Font.BOLD,15)); b.setForeground(Color.WHITE); b.setBackground(bg);
-        b.setFocusPainted(false); b.setBorderPainted(false);
+        b.setMaximumSize(new Dimension(260, 40));
+        b.setFont(new Font("Serif", Font.BOLD, 15));
+        b.setForeground(Color.WHITE);
+        b.setBackground(bg);
+        b.setFocusPainted(false);
+        b.setBorderPainted(false);
         b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         return b;
     }
