@@ -80,7 +80,7 @@ public class GameView {
     public void showStartMenu(GameController c) {
         if (menuFrame != null)
             menuFrame.dispose();
-        menuFrame = new JFrame("TowerSiege");
+        menuFrame = new JFrame("TowerSiege: Definitive Edition");
         menuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         menuFrame.setResizable(false);
         JPanel p = new JPanel() {
@@ -93,7 +93,7 @@ public class GameView {
         };
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
         p.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
-        JLabel title = mkLabel("TOWERSIEGE", new Font("Serif", Font.BOLD, 52), C_GOLD);
+        JLabel title = mkLabel("TOWERSIEGE: DEFINITIVE EDITION", new Font("Serif", Font.BOLD, 46), C_GOLD);
         JLabel sub = mkLabel("Difendi la base dalle ondate nemiche!", new Font("Serif", Font.ITALIC, 18),
                 new Color(220, 200, 160));
         JLabel i1 = mkLabel("Click sx = piazza/potenzia | Click dx = vendi torre", new Font("Serif", Font.PLAIN, 13),
