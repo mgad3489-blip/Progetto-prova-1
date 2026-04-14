@@ -23,20 +23,31 @@ public class GameView {
     private static final Color C_UI = new Color(20, 15, 10, 210);
 
     private static Image spTowerBasic, spTowerSniper, spTowerRapid, spTowerIce;
-    private static Image spEnemyBasic, spEnemyFast, spEnemyTank;
+    private static Image[] spEnemyBasicAnim, spEnemyFastAnim, spEnemyTankAnim;
     private static Image imgTree, imgBush, imgRock, imgRockBush;
 
     static {
         try {
             ClassLoader cl = GameView.class.getClassLoader();
             String b = "images/Images pack/Assets/";
-            spTowerBasic = loadImg(cl, b + "Structures/Towers/magic_crystal_tower.png");
-            spTowerSniper = loadImg(cl, b + "Characters/Heroes/knight_hero.png");
-            spTowerRapid = loadImg(cl, b + "Characters/Heroes/mage_hero.png");
-            spTowerIce = tintImg(spTowerBasic, new Color(100, 180, 255, 120));
-            spEnemyBasic = loadImg(cl, b + "Enemies/Orcs/orc_raider.png");
-            spEnemyTank = loadImg(cl, b + "Enemies/Orcs/orc_brute.png");
-            spEnemyFast = tintImg(spEnemyBasic, new Color(50, 255, 50, 130));
+            String p2 = "images/pack2/";
+            String p3 = "images/pack3/";
+            
+            spTowerBasic  = loadImg(cl, p2 + "1/S_Attack.png");
+            spTowerSniper = loadImg(cl, p2 + "2/S_Attack.png");
+            spTowerRapid  = loadImg(cl, p2 + "3/S_Attack.png");
+            spTowerIce    = tintImg(spTowerBasic, new Color(100, 180, 255, 120));
+            
+            spEnemyBasicAnim = new Image[24];
+            spEnemyFastAnim = new Image[24];
+            spEnemyTankAnim = new Image[24];
+            for (int i = 0; i < 24; i++) {
+                String is = String.format("%03d", i);
+                spEnemyBasicAnim[i]  = loadImg(cl, p3 + "Zombie_Villager_1/PNG/PNG Sequences/Walking/0_Zombie_Villager_Walking_" + is + ".png");
+                spEnemyFastAnim[i]   = loadImg(cl, p3 + "Zombie_Villager_2/PNG/PNG Sequences/Walking/0_Zombie_Villager_Walking_" + is + ".png");
+                spEnemyTankAnim[i]   = loadImg(cl, p3 + "Zombie_Villager_3/PNG/PNG Sequences/Walking/0_Zombie_Villager_Walking_" + is + ".png");
+            }
+
             imgTree = loadImg(cl, b + "Props/Nature/pine_tree.png");
             imgBush = loadImg(cl, b + "Props/Nature/bush_round.png");
             imgRock = loadImg(cl, b + "Props/Nature/rock_cluster.png");
@@ -80,7 +91,7 @@ public class GameView {
     public void showStartMenu(GameController c) {
         if (menuFrame != null)
             menuFrame.dispose();
-        menuFrame = new JFrame("TowerSiege: Definitive Edition");
+        menuFrame = new JFrame("TowerSiege");
         menuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         menuFrame.setResizable(false);
         JPanel p = new JPanel() {
@@ -93,7 +104,7 @@ public class GameView {
         };
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
         p.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
-        JLabel title = mkLabel("TOWERSIEGE: DEFINITIVE EDITION", new Font("Serif", Font.BOLD, 46), C_GOLD);
+        JLabel title = mkLabel("TOWERSIEGE", new Font("Serif", Font.BOLD, 52), C_GOLD);
         JLabel sub = mkLabel("Difendi la base dalle ondate nemiche!", new Font("Serif", Font.ITALIC, 18),
                 new Color(220, 200, 160));
         JLabel i1 = mkLabel("Click sx = piazza/potenzia | Click dx = vendi torre", new Font("Serif", Font.PLAIN, 13),
@@ -504,14 +515,16 @@ public class GameView {
                         g2.setColor(new Color(255, 255, 255, 100)); g2.fillRect(sx-25, sy-25, 50, 50);
                         
                         Image pv = towerSprite(sel);
+                        int fIdx = (int) ((System.currentTimeMillis() / 150) % 6);
                         if (pv != null) { g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,.45f));
-                            g2.drawImage(pv,sx-20,sy-36,40,54,null); g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1f)); }
+                            g2.drawImage(pv, sx - 25, sy - 40, sx + 25, sy + 10, fIdx * 96, 0, fIdx * 96 + 96, 96, null); g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1f)); }
                         g2.setColor(C_GOLD); g2.setFont(new Font("Serif",Font.BOLD,14)); g2.drawString(sel.getCost()+"g",sx-14,sy+20);
                     }
                 } else {
                     Tower t = spot.getTower();
                     Image img = towerSprite(t.getType());
-                    if (img != null) g2.drawImage(img,sx-22,sy-38,44,58,null);
+                    int fIdx = (int) ((System.currentTimeMillis() / 150) % 6);
+                    if (img != null) g2.drawImage(img, sx - 25, sy - 40, sx + 25, sy + 10, fIdx * 96, 0, fIdx * 96 + 96, 96, null);
                     if (t.getLevel() > 1) { g2.setColor(C_GOLD); g2.setFont(new Font("Serif",Font.BOLD,14));
                         g2.drawString(t.getLevel()==2?"*":"**",sx-6,sy-42); }
                     if (spot == hoverSpot) {
@@ -630,35 +643,30 @@ public class GameView {
             EnemyType type = en.getType();
             int size;
             Image spr;
-            Color fallback, outline;
+            int frame = (int) ((System.currentTimeMillis() / 40) % 24);
+            Color fallback = Color.BLACK, outline = Color.BLACK;
             switch (type) {
                 case FAST:
-                    size = 22;
-                    spr = spEnemyFast;
-                    fallback = new Color(60, 200, 60);
-                    outline = new Color(30, 140, 30);
+                    size = 50;
+                    spr = spEnemyFastAnim != null ? spEnemyFastAnim[frame] : null;
                     break;
                 case TANK:
-                    size = 46;
-                    spr = spEnemyTank;
-                    fallback = new Color(120, 70, 30);
-                    outline = new Color(80, 40, 15);
+                    size = 80;
+                    spr = spEnemyTankAnim != null ? spEnemyTankAnim[frame] : null;
                     break;
                 default:
-                    size = 32;
-                    spr = spEnemyBasic;
-                    fallback = new Color(160, 90, 40);
-                    outline = new Color(110, 60, 25);
+                    size = 60;
+                    spr = spEnemyBasicAnim != null ? spEnemyBasicAnim[frame] : null;
                     break;
             }
             // Shadow
-            g2.setColor(new Color(0, 0, 0, 35));
-            g2.fillOval(ex - size / 3, ey + size / 4, size * 2 / 3, size / 4);
+            g2.setColor(new Color(0, 0, 0, 30));
+            g2.fillOval(ex - 15, ey + size / 3, 30, 12);
             if (spr != null) {
                 g2.drawImage(spr, ex - size / 2, ey - size / 2, size, size, null);
                 if (en.getHitFlashTicks() > 0) {
                     g2.setColor(new Color(255, 80, 80, 100));
-                    g2.fillOval(ex - size / 2, ey - size / 2, size, size);
+                    g2.fillOval(ex - size / 3, ey - size / 3, size * 2 / 3, size * 2 / 3);
                 }
             } else {
                 // Detailed fallback: body + outline + type marker
