@@ -33,9 +33,9 @@ public class GameView {
             String p2 = "images/pack2/";
             String p3 = "images/pack3/";
             
-            spTowerBasic  = loadImg(cl, p2 + "1/S_Attack.png");
-            spTowerSniper = loadImg(cl, p2 + "2/S_Attack.png");
-            spTowerRapid  = loadImg(cl, p2 + "3/S_Attack.png");
+            spTowerBasic  = loadImg(cl, b + "Structures/Towers/magic_crystal_tower.png");
+            spTowerSniper = loadImg(cl, b + "Characters/Heroes/knight_hero.png");
+            spTowerRapid  = loadImg(cl, b + "Characters/Heroes/mage_hero.png");
             spTowerIce    = tintImg(spTowerBasic, new Color(100, 180, 255, 120));
             
             spEnemyBasicAnim = new Image[24];
@@ -515,16 +515,14 @@ public class GameView {
                         g2.setColor(new Color(255, 255, 255, 100)); g2.fillRect(sx-25, sy-25, 50, 50);
                         
                         Image pv = towerSprite(sel);
-                        int fIdx = (int) ((System.currentTimeMillis() / 150) % 6);
                         if (pv != null) { g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,.45f));
-                            g2.drawImage(pv, sx - 25, sy - 40, sx + 25, sy + 10, fIdx * 96, 0, fIdx * 96 + 96, 96, null); g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1f)); }
+                            g2.drawImage(pv,sx-20,sy-36,40,54,null); g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1f)); }
                         g2.setColor(C_GOLD); g2.setFont(new Font("Serif",Font.BOLD,14)); g2.drawString(sel.getCost()+"g",sx-14,sy+20);
                     }
                 } else {
                     Tower t = spot.getTower();
                     Image img = towerSprite(t.getType());
-                    int fIdx = (int) ((System.currentTimeMillis() / 150) % 6);
-                    if (img != null) g2.drawImage(img, sx - 25, sy - 40, sx + 25, sy + 10, fIdx * 96, 0, fIdx * 96 + 96, 96, null);
+                    if (img != null) g2.drawImage(img,sx-22,sy-38,44,58,null);
                     if (t.getLevel() > 1) { g2.setColor(C_GOLD); g2.setFont(new Font("Serif",Font.BOLD,14));
                         g2.drawString(t.getLevel()==2?"*":"**",sx-6,sy-42); }
                     if (spot == hoverSpot) {
