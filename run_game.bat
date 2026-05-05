@@ -1,26 +1,29 @@
 @echo off
 echo ========================================
-echo   Tower Defense - Compilazione e Avvio
+echo   TowerSiege - Build e Avvio via JAR
 echo ========================================
 echo.
 
-REM Create build directories
-if not exist build\classes mkdir build\classes
-
-REM Copy resources
-xcopy /s /y /q src\main\resources\* build\classes\ >nul 2>&1
-
-echo Compilazione in corso...
-javac -d build/classes src/main/java/it/unibo/towerdefense/commons/*.java src/main/java/it/unibo/towerdefense/model/*.java src/main/java/it/unibo/towerdefense/view/*.java src/main/java/it/unibo/towerdefense/controller/*.java src/main/java/it/unibo/towerdefense/application/*.java
+echo Costruzione del JAR in corso (Gradle shadowJar)...
+call gradlew.bat shadowJar
 if %errorlevel% neq 0 (
     echo.
-    echo ERRORE durante la compilazione!
+    echo ERRORE durante la build Gradle!
     pause
     exit /b 1
 )
 
-echo Compilazione completata con successo!
+echo.
+echo Build completata con successo!
 echo Avvio del gioco...
 echo.
-java -cp build/classes it.unibo.towerdefense.application.TowerDefense
+
+for /f "delims=" %%f in ('dir /b /s build\libs\*-all.jar 2^>nul') do set JAR=%%f
+if not defined JAR (
+    echo ERRORE: JAR non trovato in build\libs\
+    pause
+    exit /b 1
+)
+
+java -jar "%JAR%"
 pause
